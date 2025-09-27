@@ -22,4 +22,5 @@ target("Protocol")
         "hopscotch-map",
         "glm",
         "flecs",
-        "entt")
+        "entt",
+        "protobuf-cpp")

@@ -2,6 +2,7 @@
 
 #include <string>
 #include "steam/steamnetworkingsockets.h"
+#include "steam/steamnetworkingtypes.h"
 #include "SteamInterface.h"
 #include "SynchronizedClock.h"
 
@@ -51,7 +52,7 @@ struct Client
     void Send(Packet* apPacket, EPacketFlags acPacketFlags = kReliable) const noexcept;
 
     [[nodiscard]] bool IsConnected() const noexcept;
-    [[nodiscard]] SteamNetConnectionRealTimeStatus_t GetConnectionStatus() const noexcept;
+    [[nodiscard]] SteamNetworkingQuickConnectionStatus GetConnectionStatus() const noexcept;
     [[nodiscard]] Statistics GetStatistics() const noexcept;
     [[nodiscard]] const SynchronizedClock& GetClock() const noexcept;
 

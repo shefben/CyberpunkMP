@@ -2,6 +2,9 @@
 
 #include "Core/Hooking/HookingAgent.hpp"
 #include "RED4ext/Scripting/Natives/gameIEntityStubSystem.hpp"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/common.gen.h"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/client.gen.h"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/server.gen.h"
 
 
 struct InterpolationSystem : RED4ext::IScriptable, Core::HookingAgent

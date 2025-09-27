@@ -13,6 +13,7 @@
 #define GOOGLE_PROTOBUF_COMPILER_CPP_HELPERS_H__
 
 #include <iterator>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -25,7 +26,7 @@
 #include "absl/types/optional.h"
 #include "google/protobuf/compiler/code_generator.h"
 #include "google/protobuf/compiler/cpp/names.h"
-#include "google/protobuf/compiler/cpp/options.h"
+#include "options.h"
 #include "google/protobuf/compiler/scc.h"
 #include "google/protobuf/descriptor.h"
 #include "google/protobuf/descriptor.pb.h"
@@ -310,17 +311,17 @@ inline bool IsWeak(const FieldDescriptor* field, const Options& options)
 
 inline bool IsCord(const FieldDescriptor* field)
 {
-    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && internal::cpp::EffectiveStringCType(field) == FieldOptions::CORD;
+    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && field->options().ctype() == FieldOptions::CORD;
 }
 
 inline bool IsString(const FieldDescriptor* field)
 {
-    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && internal::cpp::EffectiveStringCType(field) == FieldOptions::STRING;
+    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && field->options().ctype() == FieldOptions::STRING;
 }
 
 inline bool IsStringPiece(const FieldDescriptor* field)
 {
-    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && internal::cpp::EffectiveStringCType(field) == FieldOptions::STRING_PIECE;
+    return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING && field->options().ctype() == FieldOptions::STRING_PIECE;
 }
 
 bool IsProfileDriven(const Options& options);
@@ -331,7 +332,7 @@ bool IsRarelyPresent(const FieldDescriptor* field, const Options& options);
 // Returns true if `field` is likely to be present based on PDProto profile.
 bool IsLikelyPresent(const FieldDescriptor* field, const Options& options);
 
-float GetPresenceProbability(const FieldDescriptor* field, const Options& options);
+std::optional<float> GetPresenceProbability(const FieldDescriptor* field, const Options& options);
 
 bool IsStringInliningEnabled(const Options& options);
 
@@ -893,8 +894,8 @@ public:
         Formatter* format_;
     };
 
-    PROTOBUF_NODISCARD ScopedIndenter ScopedIndent() { return ScopedIndenter(this); }
-    template <typename... Args> PROTOBUF_NODISCARD ScopedIndenter ScopedIndent(const char* format, const Args&&... args)
+    ScopedIndenter ScopedIndent() { return ScopedIndenter(this); }
+    template <typename... Args> ScopedIndenter ScopedIndent(const char* format, const Args&&... args)
     {
         (*this)(format, static_cast<Args&&>(args)...);
         return ScopedIndenter(this);

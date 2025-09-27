@@ -13,15 +13,21 @@ add_requires(
     "spdlog",
     "hopscotch-map",
     "cryptopp",
-    "gamenetworkingsockets",
-    "glm",
+    -- "gamenetworkingsockets v1.3.0",  -- Using local build
+    "snappy",
+    "libuv",
     "openssl",
+    "glm",
     "zlib",
     "nlohmann_json",
     "flecs v4.0.3",
     "protobuf-cpp",
     "entt",
     "microsoft-gsl")
+
+-- Add configuration for packages that might have build issues
+add_requireconfs("*.protobuf*", { build = true })
+add_requireconfs("gamenetworkingsockets", {configs = {languages = "c++17"}})
 
 if is_plat("windows") then
     set_arch("x64")
@@ -46,6 +52,7 @@ includes('tools/codegen')
 includes('tools/csharp')
 
 -- add projects
+includes("vendor/GameNetworkingSockets")  -- Build local GameNetworkingSockets first
 includes("code/netpack")
 includes("code/common")
 includes("code/protocol")

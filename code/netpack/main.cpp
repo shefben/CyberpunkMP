@@ -18,13 +18,13 @@ std::string GetType(const google::protobuf::FieldDescriptor* field)
     {
         name = google::protobuf::compiler::cpp::ClassName(field->message_type());
         if (field->message_type()->file()->package() != field->file()->package())
-            name = field->message_type()->file()->package() + "::" + name;
+            name = std::string(field->message_type()->file()->package()) + "::" + name;
     }
     else if (type == google::protobuf::FieldDescriptor::TYPE_ENUM)
     {
         name = google::protobuf::compiler::cpp::ClassName(field->enum_type());
         if (field->message_type()->file()->package() != field->file()->package())
-            name = field->message_type()->file()->package() + "::" + name;
+            name = std::string(field->message_type()->file()->package()) + "::" + name;
     }
     else
     {

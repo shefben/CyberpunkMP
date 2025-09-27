@@ -7,6 +7,10 @@
 
 #include <bitset>
 
+#include "common.gen.h"
+#include "client.gen.h"
+#include "server.gen.h"
+
 template<class T>
 struct PacketEvent : T
 {

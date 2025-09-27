@@ -113,7 +113,7 @@ export default function ServerList () {
         ipToFavorite.set(entry[0], entry[1])
       })
     }
-    fetch('https://cyberpunk.skyrim-together.com/list')
+    fetch('http://127.0.0.1:8000/list')
       .then(res => res.json())
       .then(data => {
         const newServers: ServerData[] = data.servers.map((server: any): ServerData => {

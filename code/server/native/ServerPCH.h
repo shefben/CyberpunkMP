@@ -38,5 +38,5 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 
-#include <client.gen.h>
-#include <server.gen.h>
+#include "client.gen.h"
+#include "server.gen.h"

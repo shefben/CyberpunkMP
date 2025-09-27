@@ -5,8 +5,8 @@
 #include "PlayerManager.h"
 
 static constexpr char kMasterServerEndpoint[] =
-    //"http://127.0.0.1:8000";
-    "https://cyberpunk.skyrim-together.com";
+    "http://127.0.0.1:8000";
+    //"https://cyberpunk.skyrim-together.com";
 
 ServerListSystem::ServerListSystem(gsl::not_null<World*> apWorld)
     : m_pWorld(apWorld)

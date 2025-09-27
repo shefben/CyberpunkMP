@@ -1,4 +1,7 @@
 #pragma once
+#include <streambuf>
+#include <ostream>
+#include <string>
 
 struct Indent : std::streambuf
 {

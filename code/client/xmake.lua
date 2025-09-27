@@ -11,6 +11,7 @@ target("Client")
         ".",
         "../",
         "../../build",
+        "../../build/.gens/Protocol/windows/x64/release/rules/netpack",
         "../../vendor/")
     set_pcxxheader("stdafx.h")
     add_headerfiles("**.h", "**.hpp", "**.inl")
@@ -53,7 +54,8 @@ target("Client")
         "nameof",
         "semver",
         "microsoft-gsl",
-        "flecs")
+        "flecs",
+        "protobuf-cpp")
 
     on_install(function (target)
         os.cp(target:targetfile(), path.join(target:installdir("launcher"), "mod", "CyberpunkMP.dll"))

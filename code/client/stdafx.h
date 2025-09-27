@@ -51,9 +51,9 @@
 
 #include <nlohmann/json.hpp>
 
-#include <common.gen.h>
-#include <client.gen.h>
-#include <server.gen.h>
+#include "common.gen.h"
+#include "client.gen.h"
+#include "server.gen.h"
 
 #include <RED4ext/RED4ext.hpp>
 

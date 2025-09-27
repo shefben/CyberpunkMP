@@ -7,7 +7,7 @@ rule("codegen")
 
     on_config(function(target)
         local sourcebatch = target:sourcebatches()["codegen"]
-    
+
         for _, sourcefile in ipairs(sourcebatch.sourcefiles) do
             local outputSourceFile = path.join(target:autogendir(), "rules", "netpack", path.basename(sourcefile) .. ".gen.cpp")
             local objectfile = target:objectfile(outputSourceFile)

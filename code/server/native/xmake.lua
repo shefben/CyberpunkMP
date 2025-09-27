@@ -6,8 +6,9 @@ target("Server.Native")
     add_headerfiles("**.h", "**.hpp", "**.inl")
     set_pcxxheader("ServerPCH.h")
     add_includedirs(
-        ".", 
-        "../../../build", 
+        ".",
+        "../../../build",
+        "../../../build/.gens/Protocol/windows/x64/release/rules/netpack",
         "../../../vendor"
     )
 
@@ -27,7 +28,8 @@ target("Server.Native")
         "nlohmann_json",
         "flecs",
         "entt",
-        "microsoft-gsl")
+        "microsoft-gsl",
+        "protobuf-cpp")
 
     after_install(function (target)
         os.cp(path.join(target:installdir("bin"), "Server.Native.dll"), path.join(target:installdir("launcher"), "server", "Server.Native.dll"))

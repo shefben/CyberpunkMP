@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core/Stl.hpp"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/common.gen.h"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/client.gen.h"
+#include "../../build/.gens/Protocol/windows/x64/release/rules/netpack/server.gen.h"
 
 struct ChatSystem : RED4ext::IScriptable
 {

@@ -9,12 +9,13 @@
 //  Based on original Protocol Buffers design by
 //  Sanjay Ghemawat, Jeff Dean, and others.
 
-#include "google/protobuf/compiler/cpp/helpers.h"
+#include "helpers.h"
 
 #include <algorithm>
 #include <cstdint>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <queue>
 #include <string>
 #include <type_traits>
@@ -930,7 +931,7 @@ bool IsLikelyPresent(const FieldDescriptor* field, const Options& options) {
   return false;
 }
 
-float GetPresenceProbability(const FieldDescriptor* field,
+std::optional<float> GetPresenceProbability(const FieldDescriptor* field,
                              const Options& options) {
   return 1.f;
 }
@@ -948,7 +949,7 @@ bool CanStringBeInlined(const FieldDescriptor* field) {
   // We rely on has bits to distinguish field presence for release_$name$.  When
   // there is no hasbit, we cannot use the address of the string instance when
   // the field has been inlined.
-  if (!internal::cpp::HasHasbit(field)) return false;
+  if (!field->is_optional()) return false;
 
   if (!IsString(field)) return false;
   if (!field->default_value_string().empty()) return false;
@@ -1071,7 +1072,7 @@ bool HasRepeatedFields(const FileDescriptor* file) {
 static bool IsStringPieceField(const FieldDescriptor* field,
                                const Options& options) {
   return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING &&
-         internal::cpp::EffectiveStringCType(field) ==
+         field->options().ctype() ==
              FieldOptions::STRING_PIECE;
 }
 
@@ -1095,7 +1096,7 @@ bool HasStringPieceFields(const FileDescriptor* file, const Options& options) {
 
 static bool IsCordField(const FieldDescriptor* field, const Options& options) {
   return field->cpp_type() == FieldDescriptor::CPPTYPE_STRING &&
-         internal::cpp::EffectiveStringCType(field) == FieldOptions::CORD;
+         field->options().ctype() == FieldOptions::CORD;
 }
 
 static bool HasCordFields(const Descriptor* descriptor,
