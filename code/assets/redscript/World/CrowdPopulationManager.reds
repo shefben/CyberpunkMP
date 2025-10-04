@@ -253,7 +253,7 @@ public class CrowdPopulationManager extends IScriptable {
     private func SpawnCiviliansAroundPosition(centerPosition: Vector4, count: Int32) -> Void {
         let crowdSystem = GameInstance.GetCrowdSystem(GetGameInstance());
 
-        for i in Range(count) {
+        for i in Range(0, Cast<Float>(count)) {
             // Find valid spawn position
             let spawnPosition = this.FindCivilianSpawnPosition(centerPosition);
             if Vector4.IsZero(spawnPosition) {
@@ -622,7 +622,7 @@ public class CrowdPopulationManager extends IScriptable {
 
 // === Supporting Enums ===
 
-public enum EPopulationZoneType : Uint8 {
+public enum EPopulationZoneType {
     BusinessDistrict = 0,
     TechDistrict = 1,
     Entertainment = 2,
@@ -632,7 +632,7 @@ public enum EPopulationZoneType : Uint8 {
     Industrial = 6
 }
 
-public enum EWeatherType : Uint8 {
+public enum EWeatherType  {
     Clear = 0,
     Rain = 1,
     Storm = 2,

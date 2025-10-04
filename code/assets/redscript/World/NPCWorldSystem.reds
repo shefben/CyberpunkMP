@@ -481,7 +481,7 @@ public class NPCWorldSystem extends IScriptable {
     }
 
     private func FindNPCManagerIndex(npcId: Uint64) -> Int32 {
-        for i in Range(ArraySize(this.m_trackedNPCs)) {
+        for i in Range(0, Cast<Int32>(ArraySize(this.m_trackedNPCs))) {
             if this.m_trackedNPCs[i].GetNPCId() == npcId {
                 return i;
             }
@@ -499,7 +499,7 @@ public class NPCWorldSystem extends IScriptable {
     }
 
     private func FindQuestNPCIndex(npcId: Uint64) -> Int32 {
-        for i in Range(ArraySize(this.m_questNPCs)) {
+        for i in Range(0, Cast<Float>(ArraySize(this.m_questNPCs)) {
             if this.m_questNPCs[i].GetNPCId() == npcId {
                 return i;
             }
@@ -637,7 +637,7 @@ public struct NPCSystemStatus {
 
 // === Enumerations ===
 
-public enum ENPCType : Uint8 {
+public enum ENPCType {
     Civilian = 0,
     Police = 1,
     Enemy = 2,
@@ -650,7 +650,7 @@ public enum ENPCType : Uint8 {
     Passenger = 9
 }
 
-public enum ENPCCombatState : Uint8 {
+public enum ENPCCombatState {
     Passive = 0,
     Alert = 1,
     InCombat = 2,
@@ -659,7 +659,7 @@ public enum ENPCCombatState : Uint8 {
     Dead = 5
 }
 
-public enum ENPCDialogueState : Uint8 {
+public enum ENPCDialogueState  {
     None = 0,
     Available = 1,
     InProgress = 2,
@@ -824,3 +824,4 @@ public class QuestNPCManager extends IScriptable {
         return this.m_questId;
     }
 }
+

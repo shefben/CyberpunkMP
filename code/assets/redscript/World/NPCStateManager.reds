@@ -565,3 +565,13 @@ public class NPCStateManager extends IScriptable {
     public func GetCombatStateEnum() -> ENPCCombatState { return this.m_lastCombatState; }
     public func GetDialogueStateEnum() -> ENPCDialogueState { return this.m_lastDialogueState; }
 }
+
+// === Supporting Structs ===`r`n`r`npublic struct NPCSyncData {
+    public let npcId: Uint64;
+    public let position: Vector3;
+    public let rotation: Quaternion;
+    public let health: Float;
+    public let combatState: ENPCCombatState;
+    public let dialogueState: ENPCDialogueState;
+    public let timestamp: Float;
+}

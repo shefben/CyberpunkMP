@@ -4,6 +4,9 @@ import CyberpunkMP.*
 import CyberpunkMP.World.*
 import CyberpunkMP.Ink.*
 
+// LogChannel native function declaration
+native func LogChannel(channel: CName, const text: script_ref<String>)
+
 public struct TaxiJobInfo {
     public let id: Uint32;
     public let pickupLocation: Vector4;

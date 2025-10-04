@@ -246,7 +246,7 @@ public class TrafficSystemManager extends IScriptable {
     private func SpawnTrafficVehicles(centerPosition: Vector4, count: Int32) -> Void {
         let trafficSystem = GameInstance.GetTrafficSystem(GetGameInstance());
 
-        for i in Range(count) {
+        for i in Range(0, Cast<Int32>(count)) {
             // Find valid spawn position on road network
             let spawnPosition = this.FindTrafficSpawnPosition(centerPosition);
             if Vector4.IsZero(spawnPosition) {
@@ -273,7 +273,7 @@ public class TrafficSystemManager extends IScriptable {
     private func SpawnPedestrianNPCs(centerPosition: Vector4, count: Int32) -> Void {
         let crowdSystem = GameInstance.GetCrowdSystem(GetGameInstance());
 
-        for i in Range(count) {
+        for i in Range(0, Cast<Int32>(count)) {
             // Find valid spawn position on sidewalk
             let spawnPosition = this.FindPedestrianSpawnPosition(centerPosition);
             if Vector4.IsZero(spawnPosition) {
@@ -300,7 +300,7 @@ public class TrafficSystemManager extends IScriptable {
     private func DespawnDistantVehicles(playerPosition: Vector4) -> Void {
         let vehiclesToRemove: array<Int32>;
 
-        for i in Range(ArraySize(this.m_trackedVehicles)) {
+        for i in Range(0, Cast<Int32>(ArraySize(this.m_trackedVehicles))) {
             let vehicleTracker = this.m_trackedVehicles[i];
             let vehicle = vehicleTracker.GetVehicle();
 
@@ -313,7 +313,7 @@ public class TrafficSystemManager extends IScriptable {
         }
 
         // Remove in reverse order to maintain indices
-        for i in Range(ArraySize(vehiclesToRemove)) {
+        for i in Range(0, Cast<Int32>(ArraySize(vehiclesToRemove))) {
             let index = vehiclesToRemove[ArraySize(vehiclesToRemove) - 1 - i];
             let vehicleTracker = this.m_trackedVehicles[index];
             this.DespawnTrafficVehicle(vehicleTracker.GetVehicle());
@@ -483,7 +483,7 @@ public class TrafficSystemManager extends IScriptable {
         let navigationSystem = GameInstance.GetNavigationSystem(GetGameInstance());
 
         // Try multiple random positions
-        for i in Range(10) {
+        for i in Range(0, 10) {
             let randomOffset = this.GenerateRandomOffset(this.m_trafficSpawnRadius);
             let testPosition = Vector4.Vector4To3(centerPosition) + randomOffset;
 
@@ -500,7 +500,7 @@ public class TrafficSystemManager extends IScriptable {
         let navigationSystem = GameInstance.GetNavigationSystem(GetGameInstance());
 
         // Try multiple random positions
-        for i in Range(10) {
+        for i in Range(0, 10) {
             let randomOffset = this.GenerateRandomOffset(this.m_pedestrianSpawnRadius);
             let testPosition = Vector4.Vector4To3(centerPosition) + randomOffset;
 
@@ -720,7 +720,7 @@ public struct VehicleSpawnData {
 }
 
 // Traffic zone types for different areas
-public enum ETrafficZoneType : Uint8 {
+public enum ETrafficZoneType {
     Urban = 0,
     Highway = 1,
     Residential = 2,
@@ -820,3 +820,4 @@ public class VehicleStateTracker extends IScriptable {
         return this.m_vehicleId;
     }
 }
+

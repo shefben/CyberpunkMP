@@ -45,7 +45,7 @@ public class AmbientActivityManager extends IScriptable {
     public func Initialize(isHost: Bool) -> Void {
         this.m_isHost = isHost;
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Ambient] Initializing Ambient Activity Manager...");
+        LogChannel(n"Ambient","[Ambient] Initializing Ambient Activity Manager...");
 
         // Initialize activity zones
         this.InitializeActivityZones();
@@ -57,7 +57,7 @@ public class AmbientActivityManager extends IScriptable {
         this.ConfigureAmbientSettings();
 
         this.m_isInitialized = true;
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Ambient] Ambient Activity Manager initialized");
+        LogChannel(n"Ambient","[Ambient] Ambient Activity Manager initialized");
     }
 
     private func InitializeActivityZones() -> Void {
@@ -68,7 +68,7 @@ public class AmbientActivityManager extends IScriptable {
         this.CreatePatrolZones();
         this.CreateEventZones();
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created " + ArraySize(this.m_activityZones) + " activity zones");
+        LogChannel(n"Ambient",s"[Ambient] Created " + ArraySize(this.m_activityZones) + " activity zones");
     }
 
     private func CreateStreetVendorZones() -> Void {
@@ -166,14 +166,14 @@ public class AmbientActivityManager extends IScriptable {
         this.StartPatrolSystem();
         this.StartRandomEventSystem();
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Ambient] All activity systems started");
+        LogChannel(n"Ambient","[Ambient] All activity systems started");
     }
 
     private func ConfigureAmbientSettings() -> Void {
         // Configure settings to match singleplayer ambient density
         this.SetActivityDensity(1.0);
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Ambient] Ambient settings configured");
+        LogChannel(n"Ambient","[Ambient] Ambient settings configured");
     }
 
     public func Update(deltaTime: Float) -> Void {
@@ -191,7 +191,7 @@ public class AmbientActivityManager extends IScriptable {
 
         // Update existing activities
         if this.m_activityUpdateTimer >= this.ACTIVITY_UPDATE_INTERVAL {
-            this.UpdateAllActivities();
+            this.UpdateAllActivities(deltaTime);
             this.m_activityUpdateTimer = 0.0;
         }
 
@@ -272,17 +272,15 @@ public class AmbientActivityManager extends IScriptable {
 
         // Create vendor activity
         let vendor = new StreetVendor();
-        vendor.Initialize(vendorNPC, zone.GetZoneCenter(), this.SelectVendorType(zone));
+        vendor.InitializeVendor(zone.GetZoneCenter(), this.SelectVendorType(zone));
         ArrayPush(this.m_streetVendors, vendor);
 
-        // Register as general activity
-        let activity = new AmbientActivity();
-        activity.Initialize(EActivityType.StreetVendor, vendorPosition, 300.0); // 5 minutes
-        ArrayPush(this.m_activeActivities, activity);
+        // Register as general activity - use concrete StreetVendor instead of abstract AmbientActivity
+        ArrayPush(this.m_activeActivities, vendor);
 
         zone.AddActivity();
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created street vendor at: " + ToString(vendorPosition.X) + ", " + ToString(vendorPosition.Y));
+        LogChannel(n"Ambient",s"[Ambient] Created street vendor at: " + ToString(vendorPosition.X) + ", " + ToString(vendorPosition.Y));
     }
 
     private func SpawnStreetMusicians() -> Void {
@@ -314,13 +312,11 @@ public class AmbientActivityManager extends IScriptable {
         musician.Initialize(musicianNPC, this.SelectInstrumentType(), this.SelectMusicGenre());
         ArrayPush(this.m_streetMusicians, musician);
 
-        let activity = new AmbientActivity();
-        activity.Initialize(EActivityType.StreetMusician, musicianPosition, 600.0); // 10 minutes
-        ArrayPush(this.m_activeActivities, activity);
+        let activitySM = new StreetMusician();`r`nactivitySM.Initialize(musicianPosition);`r`nArrayPush(this.m_activeActivities, activitySM);
 
         zone.AddActivity();
 
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created street musician at: " + ToString(musicianPosition.X) + ", " + ToString(musicianPosition.Y));
+        LogChannel(n"Ambient",s"[Ambient] Created street musician at: " + ToString(musicianPosition.X) + ", " + ToString(musicianPosition.Y));
     }
 
     private func SpawnConversations() -> Void {
@@ -347,7 +343,7 @@ public class AmbientActivityManager extends IScriptable {
         let participantCount = RandRange(2, 4);
         let participants: array<ref<NPCPuppet>>;
 
-        for i in Range(participantCount) {
+        for i in Range(0, Cast<Int32>(participantCount)) {
             let participantPos = this.GenerateNearbyPosition(conversationPosition, 2.0);
             let participant = this.SpawnConversationNPC(participantPos);
             if IsDefined(participant) {
@@ -357,16 +353,16 @@ public class AmbientActivityManager extends IScriptable {
 
         if ArraySize(participants) >= 2 {
             let conversation = new AmbientConversation();
-            conversation.Initialize(participants, this.SelectConversationTopic(zone));
+            conversation.InitializeConversation(conversationPosition, this.SelectConversationTopic(zone));
+            conversation.SetParticipants(participants);
             ArrayPush(this.m_conversations, conversation);
 
-            let activity = new AmbientActivity();
-            activity.Initialize(EActivityType.Conversation, conversationPosition, 180.0); // 3 minutes
-            ArrayPush(this.m_activeActivities, activity);
+            // Use the concrete conversation instead of abstract AmbientActivity
+            ArrayPush(this.m_activeActivities, conversation);
 
             zone.AddActivity();
 
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created conversation with " + ArraySize(participants) + " participants");
+            LogChannel(n"Ambient",s"[Ambient] Created conversation with " + ArraySize(participants) + " participants");
         }
     }
 
@@ -394,7 +390,7 @@ public class AmbientActivityManager extends IScriptable {
         let officerCount = RandRange(1, 3);
         let officers: array<ref<NPCPuppet>>;
 
-        for i in Range(officerCount) {
+        for i in Range(0, Cast<Int32>(officerCount)) {
             let officerPos = this.GenerateNearbyPosition(patrolStartPosition, 3.0);
             let officer = this.SpawnPoliceNPC(officerPos);
             if IsDefined(officer) {
@@ -404,16 +400,16 @@ public class AmbientActivityManager extends IScriptable {
 
         if ArraySize(officers) > 0 {
             let patrol = new PolicePatrol();
-            patrol.Initialize(officers, this.GeneratePatrolRoute(zone));
+            patrol.InitializePatrol(patrolStartPosition, this.GeneratePatrolRoute(zone));
+            patrol.SetOfficers(officers);
             ArrayPush(this.m_policePatrols, patrol);
 
-            let activity = new AmbientActivity();
-            activity.Initialize(EActivityType.PolicePatrol, patrolStartPosition, 900.0); // 15 minutes
-            ArrayPush(this.m_activeActivities, activity);
+            // Use the concrete patrol instead of abstract AmbientActivity
+            ArrayPush(this.m_activeActivities, patrol);
 
             zone.AddActivity();
 
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created police patrol with " + ArraySize(officers) + " officers");
+            LogChannel(n"Ambient",s"[Ambient] Created police patrol with " + ArraySize(officers) + " officers");
         }
     }
 
@@ -443,45 +439,43 @@ public class AmbientActivityManager extends IScriptable {
             randomEvent.Initialize(selectedEventType, eventPosition, this.GetEventDuration(selectedEventType));
             ArrayPush(this.m_randomEvents, randomEvent);
 
-            let activity = new AmbientActivity();
-            activity.Initialize(EActivityType.RandomEvent, eventPosition, randomEvent.GetDuration());
-            ArrayPush(this.m_activeActivities, activity);
+            ArrayPush(this.m_activeActivities, randomEvent);
 
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Ambient] Created random event: " + ToString(EnumInt(selectedEventType)));
+            LogChannel(n"Ambient",s"[Ambient] Created random event: " + ToString(EnumInt(selectedEventType)));
         }
     }
 
     // === Activity Management ===
 
-    private func UpdateAllActivities() -> Void {
+    private func UpdateAllActivities(deltaTime: Float) -> Void {
         // Update street vendors
         for vendor in this.m_streetVendors {
-            vendor.Update();
+            vendor.Update(deltaTime);
         }
 
         // Update musicians
         for musician in this.m_streetMusicians {
-            musician.Update();
+            musician.Update(deltaTime);
         }
 
         // Update conversations
         for conversation in this.m_conversations {
-            conversation.Update();
+            conversation.Update(deltaTime);
         }
 
         // Update patrols
         for patrol in this.m_policePatrols {
-            patrol.Update();
+            patrol.Update(deltaTime);
         }
 
         // Update random events
         for event in this.m_randomEvents {
-            event.Update();
+            event.Update(deltaTime);
         }
 
         // Update zones
         for zone in this.m_activityZones {
-            zone.Update();
+            zone.Update(deltaTime);
         }
     }
 
@@ -489,14 +483,14 @@ public class AmbientActivityManager extends IScriptable {
         // Remove expired activities
         let activitiesToRemove: array<Int32>;
 
-        for i in Range(ArraySize(this.m_activeActivities)) {
+        for i in Range(0, Cast<Int32>(ArraySize(this.m_activeActivities))) {
             if this.m_activeActivities[i].IsExpired() {
                 ArrayPush(activitiesToRemove, i);
             }
         }
 
         // Remove in reverse order to maintain indices
-        for i in Range(ArraySize(activitiesToRemove)) {
+        for i in Range(0, Cast<Int32>(ArraySize(activitiesToRemove))) {
             let index = activitiesToRemove[ArraySize(activitiesToRemove) - 1 - i];
             let activity = this.m_activeActivities[index];
             this.CleanupActivity(activity);
@@ -705,12 +699,42 @@ public class AmbientActivityManager extends IScriptable {
     }
 
     private func SpawnNPCAtPosition(npcRecord: TweakDBID, position: Vector4) -> ref<NPCPuppet> {
-        let npcSystem = GameInstance.GetNPCSystem(GetGameInstance());
-        let spawnTransform: WorldTransform;
-        WorldTransform.SetPosition(spawnTransform, Vector4.Vector4To3(position));
-        WorldTransform.SetOrientation(spawnTransform, EulerAngles.ToQuat(new EulerAngles(0.0, 0.0, RandRangeF(0.0, 360.0))));
+        let entitySystem = GameInstance.GetDynamicEntitySystem();
+        if !IsDefined(entitySystem) {
+            LogChannel(n"Ambient", "[Ambient] DynamicEntitySystem not available");
+            return null;
+        }
 
-        return npcSystem.SpawnNPC(npcRecord, spawnTransform);
+        // Create entity spec for NPC spawning
+        let npcSpec = new DynamicEntitySpec();
+        npcSpec.recordID = npcRecord;
+        npcSpec.appearanceName = n""; // Use default appearance
+        npcSpec.position = position;
+        npcSpec.orientation = EulerAngles.ToQuat(new EulerAngles(0.0, 0.0, RandRangeF(0.0, 360.0)));
+        npcSpec.persistState = false; // Don't persist ambient NPCs
+        npcSpec.persistSpawn = false; // Don't persist across saves
+        npcSpec.alwaysSpawned = false; // Only spawn when player is around
+        npcSpec.spawnInView = false; // Can spawn in view for ambient activities
+        npcSpec.active = true; // Spawn immediately
+        npcSpec.tags = [n"CyberpunkMP", n"Ambient"];
+
+        let entityID = entitySystem.CreateEntity(npcSpec);
+        if !EntityID.IsDefined(entityID) {
+            LogChannel(n"Ambient", "[Ambient] Failed to create NPC entity");
+            return null;
+        }
+
+        // Get the spawned entity as NPCPuppet
+        let entity = entitySystem.GetEntity(entityID);
+        let npcPuppet = entity as NPCPuppet;
+
+        if IsDefined(npcPuppet) {
+            LogChannel(n"Ambient", s"[Ambient] Successfully spawned NPC: " + TDBID.ToStringDEBUG(npcRecord));
+        } else {
+            LogChannel(n"Ambient", "[Ambient] Entity created but not an NPCPuppet");
+        }
+
+        return npcPuppet;
     }
 
     // === Activity Type Selectors ===
@@ -758,7 +782,7 @@ public class AmbientActivityManager extends IScriptable {
 
         // Generate 3-5 waypoints for patrol route
         let waypointCount = RandRange(3, 6);
-        for i in Range(waypointCount) {
+        for i in Range(0, Cast<Int32>(waypointCount)) {
             let waypoint = this.GenerateRandomPositionInRadius(center, radius);
             ArrayPush(route, waypoint);
         }
@@ -899,6 +923,7 @@ public class ActivityZone extends IScriptable {
     private let m_radius: Float;
     private let m_activityType: EActivityType;
     private let m_activityDensity: Float = 1.0;
+    private let m_maxActivities: Int32 = 5;
 
     public func Initialize(center: Vector4, radius: Float, activityType: EActivityType) -> Void {
         this.m_center = center;
@@ -930,6 +955,38 @@ public class ActivityZone extends IScriptable {
         return this.m_activityDensity;
     }
 
+    public func SetMaxActivities(maxActivities: Int32) -> Void {
+        this.m_maxActivities = maxActivities;
+    }
+
+    public func GetMaxActivities() -> Int32 {
+        return this.m_maxActivities;
+    }
+
+    public func CanSpawnMoreActivities() -> Bool {
+        // Simple logic - can always spawn more for now
+        // In a full implementation, this would check current activity count vs max
+        return true;
+    }
+
+    public func GetZoneCenter() -> Vector4 {
+        return this.m_center;
+    }
+
+    public func GetZoneRadius() -> Float {
+        return this.m_radius;
+    }
+
+    public func AddActivity() -> Void {
+        // Track that an activity was added to this zone
+        // In a full implementation, this would increment a counter
+    }
+
+    public func RemoveActivity() -> Void {
+        // Track that an activity was removed from this zone
+        // In a full implementation, this would decrement a counter
+    }
+
     public func Update(deltaTime: Float) -> Void {
         // Zone update logic
     }
@@ -941,6 +998,7 @@ public abstract class AmbientActivity extends IScriptable {
     protected let m_position: Vector4;
     protected let m_isActive: Bool = false;
     protected let m_startTime: Float;
+    protected let m_activityType: EActivityType;
 
     public func Initialize(position: Vector4) -> Void {
         this.m_position = position;
@@ -966,6 +1024,20 @@ public abstract class AmbientActivity extends IScriptable {
     public func Update(deltaTime: Float) -> Void {
         // Base update logic
     }
+
+    public func GetActivityType() -> EActivityType {
+        return this.m_activityType;
+    }
+
+    protected func SetActivityType(activityType: EActivityType) -> Void {
+        this.m_activityType = activityType;
+    }
+
+    public func IsExpired() -> Bool {
+        // Simple expiration logic - activities expire after 10 minutes
+        let currentTime = EngineTime.ToFloat(GameInstance.GetSimTime(GetGameInstance()));
+        return (currentTime - this.m_startTime) > 600.0;
+    }
 }
 
 // Street Vendor activity
@@ -976,6 +1048,7 @@ public class StreetVendor extends AmbientActivity {
     public func InitializeVendor(position: Vector4, vendorType: EVendorType) -> Void {
         this.Initialize(position);
         this.m_vendorType = vendorType;
+        this.SetActivityType(EActivityType.StreetVendor);
     }
 }
 
@@ -989,6 +1062,7 @@ public class StreetMusician extends AmbientActivity {
         this.Initialize(position);
         this.m_instrumentType = instrument;
         this.m_musicGenre = genre;
+        this.SetActivityType(EActivityType.StreetMusician);
     }
 }
 
@@ -1000,6 +1074,20 @@ public class AmbientConversation extends AmbientActivity {
     public func InitializeConversation(position: Vector4, topic: EConversationTopic) -> Void {
         this.Initialize(position);
         this.m_conversationTopic = topic;
+        this.SetActivityType(EActivityType.Conversation);
+    }
+
+    public func SetParticipants(participants: array<ref<NPCPuppet>>) -> Void {
+        ArrayClear(this.m_participants);
+        for participant in participants {
+            ArrayPush(this.m_participants, participant);
+        }
+    }
+
+    public func IsFinished() -> Bool {
+        // Conversations finish after 3 minutes or when participants leave
+        let currentTime = EngineTime.ToFloat(GameInstance.GetSimTime(GetGameInstance()));
+        return (currentTime - this.m_startTime) > 180.0;
     }
 }
 
@@ -1011,6 +1099,14 @@ public class PolicePatrol extends AmbientActivity {
     public func InitializePatrol(startPosition: Vector4, route: array<Vector4>) -> Void {
         this.Initialize(startPosition);
         this.m_patrolRoute = route;
+        this.SetActivityType(EActivityType.PolicePatrol);
+    }
+
+    public func SetOfficers(officers: array<ref<NPCPuppet>>) -> Void {
+        ArrayClear(this.m_officers);
+        for officer in officers {
+            ArrayPush(this.m_officers, officer);
+        }
     }
 }
 
@@ -1022,5 +1118,10 @@ public class RandomEvent extends AmbientActivity {
     public func InitializeEvent(position: Vector4, eventType: ERandomEventType) -> Void {
         this.Initialize(position);
         this.m_eventType = eventType;
+        this.SetActivityType(EActivityType.RandomEvent);
     }
 }
+
+
+
+

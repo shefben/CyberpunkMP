@@ -3,6 +3,9 @@ module CyberpunkMP.Plugins
 import CyberpunkMP.*
 import CyberpunkMP.World.*
 
+// LogChannel native function declaration
+native func LogChannel(channel: CName, const text: script_ref<String>)
+
 // Base RPC classes for multiplayer communication
 public native class ServerRpc extends IScriptable {
 }

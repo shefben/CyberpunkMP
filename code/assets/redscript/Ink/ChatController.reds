@@ -89,7 +89,7 @@ public class ChatController extends inkHUDGameController {
             targets.Select(this.GetWidget(n"wrapper/chat/bg"));
             this.PlayLibraryAnimationOnTargets(n"to_input", targets);
 
-            this.RequestSetFocus(inkTextInputRef.Get(this.m_inputRef));
+            this.RequestSetFocus(inkWidgetRef.Get(this.m_inputRef));
             uiBlackboard.SetBool(GetAllBlackboardDefs().UIGameData.UIChatInputContextRequest, true, true);
             this.m_player.RegisterInputListener(this, n"OpenPauseMenu");
             this.m_player.RegisterInputListener(this, n"back");

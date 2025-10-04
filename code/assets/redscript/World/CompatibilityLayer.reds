@@ -16,7 +16,7 @@ public class CompatibilityLayer extends IScriptable {
         this.InitializeCompatibilityChecks();
         this.ValidateModCompatibility();
         this.m_isInitialized = true;
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] Compatibility layer initialized");
+        LogChannel(n"Compatibility","[Compatibility] Compatibility layer initialized");
     }
 
     private func InitializeCompatibilityChecks() -> Void {
@@ -41,16 +41,16 @@ public class CompatibilityLayer extends IScriptable {
         // Check for modern API patterns
         let entitySystem = GameInstance.GetEntitySystem(GetGameInstance());
         if IsDefined(entitySystem) {
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] RED4ext API: ✓ Compatible");
+            LogChannel(n"Compatibility","[Compatibility] RED4ext API: ✓ Compatible");
         } else {
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] RED4ext API: ✗ Missing or incompatible");
+            LogChannel(n"Compatibility","[Compatibility] RED4ext API: ✗ Missing or incompatible");
         }
     }
 
     private func CheckCodewareCompatibility() -> Void {
         // Codeware 1.19.0+ compatibility verification
         // Test modern import patterns and API availability
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] Codeware imports: ✓ Compatible with specific namespaces");
+        LogChannel(n"Compatibility","[Compatibility] Codeware imports: ✓ Compatible with specific namespaces");
     }
 
     private func CheckTweakXLCompatibility() -> Void {
@@ -58,22 +58,22 @@ public class CompatibilityLayer extends IScriptable {
         // Verify TweakDB access patterns work correctly
         let testRecord = TweakDBInterface.GetRecord(t"Character.MaMuppet");
         if IsDefined(testRecord) {
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] TweakXL integration: ✓ Compatible");
+            LogChannel(n"Compatibility","[Compatibility] TweakXL integration: ✓ Compatible");
         } else {
-            GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] TweakXL integration: ⚠ TweakDB records may not be loaded");
+            LogChannel(n"Compatibility","[Compatibility] TweakXL integration: ⚠ TweakDB records may not be loaded");
         }
     }
 
     private func CheckArchiveXLCompatibility() -> Void {
         // ArchiveXL 1.26.0+ compatibility verification
         // Check if custom resources can be loaded
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] ArchiveXL integration: ✓ Custom resource paths configured");
+        LogChannel(n"Compatibility","[Compatibility] ArchiveXL integration: ✓ Custom resource paths configured");
     }
 
     private func CheckInputLoaderCompatibility() -> Void {
         // Input Loader 0.1.1+ compatibility verification
         // Verify basic input loader functionality works
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] Input Loader integration: ✓ Basic input loading compatible with 0.1.1+");
+        LogChannel(n"Compatibility","[Compatibility] Input Loader integration: ✓ Basic input loading compatible with 0.1.1+");
     }
 
     private func ValidateModCompatibility() -> Void {
@@ -85,17 +85,17 @@ public class CompatibilityLayer extends IScriptable {
 
     private func ValidateCodewareTweakXLInteraction() -> Void {
         // Ensure Codeware and TweakXL work together properly
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] Codeware + TweakXL: ✓ Cross-mod compatibility verified");
+        LogChannel(n"Compatibility","[Compatibility] Codeware + TweakXL: ✓ Cross-mod compatibility verified");
     }
 
     private func ValidateArchiveXLResourceLoading() -> Void {
         // Ensure ArchiveXL resources are properly loaded
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] ArchiveXL resources: ✓ Custom assets loading verified");
+        LogChannel(n"Compatibility","[Compatibility] ArchiveXL resources: ✓ Custom assets loading verified");
     }
 
     private func ValidateInputSystemIntegration() -> Void {
         // Ensure Input Loader 0.1.1+ and game input system integration
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log("[Compatibility] Input system: ✓ Input Loader 0.1.1+ integration verified");
+        LogChannel(n"Compatibility","[Compatibility] Input system: ✓ Input Loader 0.1.1+ integration verified");
     }
 
     public func GetCompatibilityInfo() -> CompatibilityInfo {
@@ -120,15 +120,15 @@ public struct CompatibilityInfo {
 // Enhanced logging system for compatibility checks
 public abstract class CompatibilityLogger {
     public static func LogSuccess(system: String, message: String) -> Void {
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Compatibility] {system}: ✓ {message}");
+        LogChannel(n"Compatibility",s"[Compatibility] {system}: ✓ {message}");
     }
 
     public static func LogWarning(system: String, message: String) -> Void {
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Compatibility] {system}: ⚠ {message}");
+        LogChannel(n"Compatibility",s"[Compatibility] {system}: ⚠ {message}");
     }
 
     public static func LogError(system: String, message: String) -> Void {
-        GameInstance.GetDebugVisualizerSystem(GetGameInstance()).Log(s"[Compatibility] {system}: ✗ {message}");
+        LogChannel(n"Compatibility",s"[Compatibility] {system}: ✗ {message}");
     }
 }
 

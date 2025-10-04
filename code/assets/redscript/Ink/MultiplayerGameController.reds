@@ -246,7 +246,10 @@ public class MultiplayerGameController extends inkGameController {
             this.m_player.RegisterInputListener(this, n"UIEmote");
             this.m_player.RegisterInputListener(this, n"UIJob");
         } else {
-            this.GetWidget(n"hud") as inkCompoundWidget.RemoveChild(this.GetWidget(n"hud/chat"));
+            let hudWidget = this.GetWidget(n"hud");
+            if IsDefined(hudWidget) {
+                (hudWidget as inkCompoundWidget).RemoveChild(this.GetWidget(n"hud/chat"));
+            }
             this.m_player.RegisterInputListener(this, n"UIConnectToServer");
             this.m_player.UnregisterInputListener(this, n"UIDisconnectFromServer");
             this.m_player.UnregisterInputListener(this, n"UIEmote");
@@ -1012,3 +1015,4 @@ public class MultiplayerGameController extends inkGameController {
         }
     }
 }
+

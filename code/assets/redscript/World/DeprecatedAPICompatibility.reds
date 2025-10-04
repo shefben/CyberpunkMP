@@ -25,7 +25,7 @@ public abstract class DeprecatedAPICompatibility {
     // 2. WORLD TRANSFORM API - BREAKING CHANGE
     // OLD: direct property assignment (transform.Position = pos)
     // NEW: method-based assignment (WorldTransform.SetPosition())
-    public static func SetTransformSafely(inout transform: WorldTransform, position: Vector3, orientation: Quaternion) -> Void {
+    public static func SetTransformSafely(transform: ref<WorldTransform>, position: Vector3, orientation: Quaternion) -> Void {
         WorldTransform.SetPosition(transform, position);
         WorldTransform.SetOrientation(transform, orientation);
     }

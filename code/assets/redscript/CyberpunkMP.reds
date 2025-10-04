@@ -89,12 +89,12 @@ protected cb func OnUIEmoteSelectionContextChanged(value: Bool) -> Bool {
 
 public class UiMultiplayerContextDecisions extends InputContextTransitionDecisions {
 
-  protected const func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmMultiplayerResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIMultiplayerContextActive");
     return psmMultiplayerResult.value;
   }
 
-  protected const func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmMultiplayerResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIMultiplayerContextInactive");
     return psmMultiplayerResult.value;
   }
@@ -102,12 +102,12 @@ public class UiMultiplayerContextDecisions extends InputContextTransitionDecisio
 
 public class UiChatInputContextDecisions extends InputContextTransitionDecisions {
 
-  protected const func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmChatInputResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIChatInputContextActive");
     return psmChatInputResult.value;
   }
 
-  protected const func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmChatInputResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIChatInputContextInactive");
     return psmChatInputResult.value;
   }
@@ -115,12 +115,12 @@ public class UiChatInputContextDecisions extends InputContextTransitionDecisions
 
 public class UiEmoteSelectionContextDecisions extends InputContextTransitionDecisions {
 
-  protected const func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func EnterCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmEmoteSelectionResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIEmoteSelectionContextActive");
     return psmEmoteSelectionResult.value;
   }
 
-  protected const func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
+  protected func ExitCondition(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
     let psmEmoteSelectionResult: StateResultBool = stateContext.GetTemporaryBoolParameter(n"OnUIEmoteSelectionContextInactive");
     return psmEmoteSelectionResult.value;
   }

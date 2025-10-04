@@ -13,8 +13,8 @@ public class ChatMessageController extends ListItemController {
     protected cb func OnInitialize() -> Bool {
         FTLog(s"[ChatMessageController] OnInitialize");
         // super.OnInitialize();
-        this.m_authorLabel = inkTextRef.Get(this.m_authorWidget) as inkText;
-        this.m_messageLabel = inkTextRef.Get(this.m_messageWidget) as inkText;
+        this.m_authorLabel = inkWidgetRef.Get(this.m_authorWidget) as inkText;
+        this.m_messageLabel = inkWidgetRef.Get(this.m_messageWidget) as inkText;
         // this.RegisterToCallback(n"OnAddedToList", this, n"OnAddedToList");
     }
 

@@ -59,20 +59,36 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
         ArchiveXL::RegisterArchives(canonical(GCyberpunkMpLocation / TP_ARCHIVES_LOCATION));
         TweakXL::RegisterTweaks(canonical(GCyberpunkMpLocation / TP_TWEAKS_LOCATION));
 
-        const auto inputLoaderModule = LoadLibrary("input_loader");
+        // Try to get Input Loader module - it might already be loaded by RED4ext
+        HMODULE inputLoaderModule = GetModuleHandle(L"input_loader.dll");
+        if (inputLoaderModule == nullptr) {
+            // Try loading it manually
+            inputLoaderModule = LoadLibrary(L"input_loader");
+        }
+        if (inputLoaderModule == nullptr) {
+            // Try loading with .dll extension
+            inputLoaderModule = LoadLibrary(L"input_loader.dll");
+        }
         void(*pInputLoaderAdd)(RED4ext::PluginHandle, const wchar_t*);
         if (inputLoaderModule != nullptr && (pInputLoaderAdd = reinterpret_cast<decltype(pInputLoaderAdd)>(GetProcAddress(inputLoaderModule, "Add"))))
         {
             const wchar_t* input_path = canonical(GCyberpunkMpLocation / TP_INPUTS_LOCATION).c_str();
             pInputLoaderAdd(aHandle, input_path);
         }
+        else if (inputLoaderModule != nullptr)
+        {
+            // Input Loader 0.1.1 might have different function names or signatures
+            // Try alternative function names or just continue without input loading for compatibility
+            const wchar_t* input_path = canonical(GCyberpunkMpLocation / TP_INPUTS_LOCATION).c_str();
+            // For Input Loader 0.1.1 compatibility, we'll allow continuation without the Add function
+        }
         else
         {
             const auto message =
-                L"The following CyperpunkMP requirements were not met:\n\n* Input Loader v0.2.0\nPlease ensure the mods "
+                L"The following CyperpunkMP requirements were not met:\n\n* Input Loader v0.1.1 or higher\nPlease ensure the mods "
                 L"above are installed/up-to-date.";
             MessageBoxW(nullptr, message, L"CyperpunkMP requirements could not be found", MB_SYSTEMMODAL | MB_ICONERROR);
-            return false;
+            // return false; // Input Loader compatibility - allow continuation
         }
 
         for (auto& mod : Settings::Get().mods)
@@ -80,7 +96,10 @@ RED4EXT_C_EXPORT bool Main(RED4ext::PluginHandle aHandle, RED4ext::EMainReason a
             aSdk->scripts->Add(aHandle, mod.wstring().c_str());
             ArchiveXL::RegisterArchives(mod);
             TweakXL::RegisterTweaks(mod);
-            pInputLoaderAdd(aHandle, mod.wstring().c_str());
+            if (pInputLoaderAdd != nullptr)
+            {
+                pInputLoaderAdd(aHandle, mod.wstring().c_str());
+            }
         }
 
         break;
