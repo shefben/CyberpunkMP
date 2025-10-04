@@ -1,0 +1,10 @@
+# CyberpunkMP Master Server Requirements (Python 3.9+)
+
+# Web framework
+aiohttp==3.9.1
+
+# Database (SQLite3 is included in Python standard library)
+
+# Optional: Enhanced logging and monitoring
+# uvloop==0.19.0  # Faster event loop for Linux/macOS
+# aiodns==3.1.1   # Fast DNS resolution
