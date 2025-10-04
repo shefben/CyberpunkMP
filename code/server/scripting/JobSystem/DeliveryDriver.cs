@@ -122,7 +122,7 @@ namespace JobSystem
         public static readonly CName Job = new("Delivery Driver");
         public override CName Name { get { return Job; } }
 
-        private static Logger logger = new Logger("Delivery");
+        // private static Logger logger = new Logger("Delivery"); // Temporarily disabled due to interop issues
 
         public DeliveryDriver(ulong id) : base(id)
         {
@@ -154,14 +154,14 @@ namespace JobSystem
 
             if (activeJob != null)
             {
-                logger.Warn($"Attempt from player {Id} to accept job while job is active!");
+                Console.WriteLine($"[WARN] Attempt from player {Id} to accept job while job is active!");
                 return;
             }
 
             var job = DeliverySystem.Instance.AssignJob(id);
             if(job == null)
             {
-                logger.Warn($"Attempt from player {Id} to accept job already accepted!");
+                Console.WriteLine($"[WARN] Attempt from player {Id} to accept job already accepted!");
                 return;
             }
 

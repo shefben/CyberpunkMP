@@ -1,3 +1,5 @@
+module CyberpunkMP.Plugins
+
 @wrapMethod(WorldMappinsContainerController)
 public func CreateMappinUIProfile(mappin: wref<IMappin>, mappinVariant: gamedataMappinVariant, customData: ref<MappinControllerCustomData>) -> MappinUIProfile {
     if Equals(mappinVariant, gamedataMappinVariant.CPO_PingGoHereVariant) {

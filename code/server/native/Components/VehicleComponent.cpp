@@ -4,6 +4,16 @@
 #include "MovementComponent.h"
 #include "PlayerComponent.h"
 
+// Include protocol dependencies first
+#include <Core/Buffer.h>
+#include <Core/Serialization.h>
+#include <bitset>
+
+// Include generated protocol headers
+#include "common.gen.h"
+#include "client.gen.h"
+#include "server.gen.h"
+
 #include "GameServer.h"
 
 void ReplicateVehicleSpawn(flecs::entity aEntity, const VehicleComponent& aVehicleComponent, const MovementComponent& aMovementComponent)

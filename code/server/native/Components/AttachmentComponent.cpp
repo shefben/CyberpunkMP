@@ -1,4 +1,15 @@
 #include "AttachmentComponent.h"
+
+// Include protocol dependencies first
+#include <Core/Buffer.h>
+#include <Core/Serialization.h>
+#include <bitset>
+
+// Include generated protocol headers
+#include "common.gen.h"
+#include "client.gen.h"
+#include "server.gen.h"
+
 #include "GameServer.h"
 #include "PlayerComponent.h"
 

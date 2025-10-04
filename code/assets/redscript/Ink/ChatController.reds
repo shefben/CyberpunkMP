@@ -1,6 +1,7 @@
 module CyberpunkMP.Ink
 
-// import Codeware.UI.*
+import Codeware.UI.*
+import Codeware.Localization.*
 import CyberpunkMP.*
 import CyberpunkMP.World.*
 

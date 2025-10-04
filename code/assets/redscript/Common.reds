@@ -1,3 +1,5 @@
+module CyberpunkMP
+
 import CyberpunkMP.Plugins.*
 
 public native class ChatMessageUIEvent extends Event {

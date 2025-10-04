@@ -51,3 +51,11 @@ TP_EXPORT ILogger* ILogger::Get(const char* aName)
 
     return m_loggers.emplace(aName, MakeUnique<LoggerScriptInstance>(aName)).first.value().get();
 }
+
+// C-style wrapper for .NET interop
+extern "C" {
+    TP_EXPORT ILogger* Get(const char* name)
+    {
+        return ILogger::Get(name);
+    }
+}

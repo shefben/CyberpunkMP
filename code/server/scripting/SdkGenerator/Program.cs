@@ -44,6 +44,77 @@ internal class CyberpunkSdk : ILibrary
 
         module.IncludeDirs.Add(SourcePath);
 
+        // Add Visual Studio system include directories
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            // Try to find Visual Studio installation
+            var vsWhere = @"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe";
+            if (File.Exists(vsWhere))
+            {
+                try
+                {
+                    var process = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = vsWhere,
+                        Arguments = "-latest -property installationPath",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    });
+                    process.WaitForExit();
+                    var vsPath = process.StandardOutput.ReadToEnd().Trim();
+
+                    if (!string.IsNullOrEmpty(vsPath))
+                    {
+                        // Add MSVC include directories
+                        var toolsPath = Path.Combine(vsPath, "VC", "Tools", "MSVC");
+                        if (Directory.Exists(toolsPath))
+                        {
+                            var versions = Directory.GetDirectories(toolsPath).OrderByDescending(d => d);
+                            if (versions.Any())
+                            {
+                                var latestVersion = versions.First();
+                                module.IncludeDirs.Add(Path.Combine(latestVersion, "include"));
+
+                                // Also add Windows SDK headers
+                                var sdkPath = @"C:\Program Files (x86)\Windows Kits\10\Include";
+                                if (Directory.Exists(sdkPath))
+                                {
+                                    var sdkVersions = Directory.GetDirectories(sdkPath).OrderByDescending(d => d);
+                                    if (sdkVersions.Any())
+                                    {
+                                        var latestSdk = sdkVersions.First();
+                                        module.IncludeDirs.Add(Path.Combine(latestSdk, "ucrt"));
+                                        module.IncludeDirs.Add(Path.Combine(latestSdk, "shared"));
+                                        module.IncludeDirs.Add(Path.Combine(latestSdk, "um"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // Fallback to common paths
+                    var fallbackPaths = new[]
+                    {
+                        @"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\include",
+                        @"C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\include",
+                        @"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include"
+                    };
+
+                    foreach (var path in fallbackPaths)
+                    {
+                        if (Directory.Exists(path))
+                        {
+                            module.IncludeDirs.Add(path);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         foreach (var file in FileNames)
         {
             module.Headers.Add(file);

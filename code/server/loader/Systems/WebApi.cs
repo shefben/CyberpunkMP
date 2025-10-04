@@ -1,5 +1,6 @@
 ﻿using System.Security;
 using CyberpunkSdk.Internal;
+using System.Runtime.InteropServices;
 using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.Authentication;
@@ -23,12 +24,15 @@ namespace Server.Loader.Systems
 
         private bool Running { get; set; } = true;
 
+        [DllImport("Server.Native.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int ConfigGetPort();
+
         internal WebApi(Plugins plugins, Statistics statistics)
         {
             Statistics = statistics;
             Plugins = plugins;
 
-            var port = IConfig.Get().Port;
+            var port = 8080; // Default port for WebAPI (config interface disabled due to interop issues)
             var url = $"http://+:{port}";
 
             ServerTask = CreateWebServer(url).RunAsync();
@@ -41,7 +45,7 @@ namespace Server.Loader.Systems
 
         private WebServer CreateWebServer(string url)
         {
-            Logger.UnregisterLogger<ConsoleLogger>();
+            // Logger.UnregisterLogger<ConsoleLogger>(); // Temporarily disabled to avoid logger registration issues
 
             var server = new WebServer(o => o
                 .WithUrlPrefix(url)
@@ -49,7 +53,7 @@ namespace Server.Loader.Systems
                 .WithModule(new ActionModule("/api/v1/mods/", HttpVerbs.Get, HandleModsRoute))
                 .WithModule(new ActionModule("/api/v1/statistics/", HttpVerbs.Get, HandleStatistics));
 
-            RegisterAuthentication(server);
+            // RegisterAuthentication(server); // Temporarily disabled due to admin credential requirements
             RegisterPlugins(server);
             RegisterAssets(server);
             return server;

@@ -1,6 +1,7 @@
 module CyberpunkMP.World
 
-import Codeware.*
+import Codeware.UI.*
+import Codeware.Localization.*
 import CyberpunkMP.*
 import CyberpunkMP.Ink.*
 import CyberpunkMP.Plugins.*
@@ -49,9 +50,9 @@ public native class AppearanceSystem extends IScriptable {
     public native func ApplyAppearance(player: ref<GameObject>) -> Bool;
 
     private let m_callbackSystem: wref<CallbackSystem>;
-    public let m_entities: array<wref<GameObject>>;
+    public let m_entities: array<wref<GameObject>> = [];
     public let m_controller: wref<MultiplayerGameController>;
-    public let m_deliveryEntries: array<ref<JobEntry>>;
+    public let m_deliveryEntries: array<ref<JobEntry>> = [];
     public let m_mappin: NewMappinID;
 
     public func OnWorldAttached() -> Void {

@@ -5,6 +5,17 @@
 #include "Config.h"
 #include "Game/World.h"
 
+// Include protocol dependencies first
+#include <Core/Buffer.h>
+#include <Core/Serialization.h>
+#include <bitset>
+#include <entt/signal/dispatcher.hpp>
+
+// Include generated protocol headers
+#include "common.gen.h"
+#include "client.gen.h"
+#include "server.gen.h"
+
 template <typename T>
 concept NetworkMessage = requires(T a, Buffer::Writer writer, Buffer::Reader reader) {
     {

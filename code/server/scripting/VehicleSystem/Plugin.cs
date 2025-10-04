@@ -4,14 +4,26 @@ namespace EmoteSystem
 {
     public class Plugin
     {
-        public static Plugin Instance { get; set; }
+        private static Plugin? _instance;
+        public static Plugin Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new Plugin();
+                }
+                return _instance;
+            }
+        }
 
         static Plugin()
         {
-            Instance = new Plugin();
+            // Static constructor now only sets up the lazy initialization
+            // Actual initialization happens on first access
         }
 
-        Plugin()
+        private Plugin()
         {
         }
     }

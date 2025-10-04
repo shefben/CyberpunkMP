@@ -3,18 +3,25 @@ module CyberpunkMP.Plugins
 import CyberpunkMP.*
 import CyberpunkMP.World.*
 
+// Base RPC classes for multiplayer communication
+public native class ServerRpc extends IScriptable {
+}
+
+public native class ClientRpc extends IScriptable {
+}
+
 public class JobEntry {
-    let id: Uint32;
-    let name: String;
-    let description: String;
-    let reward: Uint32;
+    public let id: Uint32;
+    public let name: String;
+    public let description: String;
+    public let reward: Uint32;
 }
 
 public struct JobInfo {
-    let id: Uint32;
-    let name: String;
-    let description: String;
-    let reward: Uint32;
+    public let id: Uint32;
+    public let name: String;
+    public let description: String;
+    public let reward: Uint32;
 }
 
 public native class JobsServer extends ServerRpc {

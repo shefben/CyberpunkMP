@@ -5,21 +5,21 @@ import CyberpunkMP.World.*
 import CyberpunkMP.Ink.*
 
 public struct ShopEntry {
-    let item: TweakDBID;
-    let count: Uint32;
-    let description: String;
+    public let item: TweakDBID;
+    public let count: Uint32;
+    public let description: String;
 }
 
 public class DeliveryEntry extends JobEntry {
-    let item: TweakDBID;
-    let count: Uint32;
+    public let item: TweakDBID;
+    public let count: Uint32;
 }
 
 public struct DeliveryInfo {
-    let id: Uint32;
-    let item: TweakDBID;
-    let count: Uint32;
-    let reward: Uint32;
+    public let id: Uint32;
+    public let item: TweakDBID;
+    public let count: Uint32;
+    public let reward: Uint32;
 }
 
 public native class DeliveryServer extends ServerRpc {

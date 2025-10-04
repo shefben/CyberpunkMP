@@ -96,7 +96,7 @@ namespace JobSystem
     internal class Taxi : Job
     {
         public static readonly CName Job = new("Taxi Driver");
-        private static Logger logger = new Logger("Taxi");
+        // private static Logger logger = new Logger("Taxi"); // Temporarily disabled due to interop issues
 
         public override CName Name { get { return Job; } }
 
@@ -127,7 +127,7 @@ namespace JobSystem
                 var driver = Server.PlayerSystem.GetById(Id);
                 if (driver == null)
                 {
-                    logger.Error($"Player {Id} doesn't exist?");
+                    Console.WriteLine($"[ERROR] Player {Id} doesn't exist?");
                     CancelJob();
                     return;
                 }
@@ -178,7 +178,7 @@ namespace JobSystem
                 }
                 else
                 {
-                    logger.Info($"Distance: {distance}, Speed: {speed}");
+                    Console.WriteLine($"[INFO] Distance: {distance}, Speed: {speed}");
                 }
             }
         }
@@ -206,14 +206,14 @@ namespace JobSystem
         {
             if (activeJob != null)
             {
-                logger.Warn($"Attempt from player {Id} to accept job while job is active!");
+                Console.WriteLine($"[WARN] Attempt from player {Id} to accept job while job is active!");
                 return;
             }
 
             var job = TaxiServer.AssignJob(jobId);
             if (job == null)
             {
-                logger.Warn($"Attempt from player {Id} to accept job already accepted!");
+                Console.WriteLine($"[WARN] Attempt from player {Id} to accept job already accepted!");
                 return;
             }
 
@@ -230,14 +230,14 @@ namespace JobSystem
         {
             if (activeJob == null)
             {
-                logger.Warn($"Player {Id} received a Rider Ready notification but no job is active!");
+                Console.WriteLine($"[WARN] Player {Id} received a Rider Ready notification but no job is active!");
                 return;
             }
 
             var rider = CyberpunkSdk.Server.PlayerSystem.GetById(activeJob.Value.PlayerId);
             if (rider == null)
             {
-                logger.Warn($"Player {Id} received a Rider Ready notification but no job is active!");
+                Console.WriteLine($"[WARN] Player {Id} received a Rider Ready notification but no job is active!");
 
                 CancelJob();
 

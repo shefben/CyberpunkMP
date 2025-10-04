@@ -26,7 +26,7 @@ namespace JobSystem
         private Dictionary<ulong, Job> playerJobs = new Dictionary<ulong, Job>();
         private Dictionary<CName, Func<ulong, Job>> availableJobs = new Dictionary<CName, Func<ulong, Job>>();
 
-        private Logger logger = new Logger("Jobs");
+        // private Logger logger = new Logger("Jobs"); // Temporarily disabled due to interop issues
 
         internal JobManager()
         {
@@ -49,13 +49,13 @@ namespace JobSystem
 
             if(jobCName == null)
             {
-                logger.Error("Attempt to register job without a name.");
+                Console.WriteLine("[ERROR] Attempt to register job without a name.");
                 return;
             }
 
             availableJobs[jobCName] = (ulong id) => Activator.CreateInstance(typeof(T), [id]) as Job;
 
-            logger.Info("\tRegistered job " + jobCName);
+            Console.WriteLine($"[INFO] \tRegistered job {jobCName}");
         }
 
         internal bool Get(ulong id, out Job? job)
@@ -67,7 +67,7 @@ namespace JobSystem
         {
             if(playerJobs.TryGetValue(id, out var jobName))
             {
-                logger.Warn($"Player {id} tried to get new job {name} but already has a job {jobName}!");
+                Console.WriteLine($"[WARN] Player {id} tried to get new job {name} but already has a job {jobName}!");
                 Cyberpunk.Rpc.Client.Plugins.JobsClient.SetActiveJob(id, jobName.Name);
                 return;
             }
@@ -78,9 +78,9 @@ namespace JobSystem
                 playerJobs.Add(id, job);
             }
             else
-                logger.Warn($"Player {id} tried to get new job {name} but it doesn't exist!");
+                Console.WriteLine($"[WARN] Player {id} tried to get new job {name} but it doesn't exist!");
 
-            logger.Info($"Player {id} got new job {name}.");
+            Console.WriteLine($"[INFO] Player {id} got new job {name}.");
 
             Cyberpunk.Rpc.Client.Plugins.JobsClient.SetActiveJob(id, name);
         }
@@ -89,7 +89,7 @@ namespace JobSystem
         {
             if(playerJobs.Remove(id, out var job))
             {
-                logger.Info($"Player {id} quit job {job.Name}.");
+                Console.WriteLine($"[INFO] Player {id} quit job {job.Name}.");
 
                 Cyberpunk.Rpc.Client.Plugins.JobsClient.SetActiveJob(id, new("None"));
             }
@@ -127,7 +127,7 @@ namespace JobSystem
 
         private void Save(float delta)
         {
-            logger.Info("Saving Jobs...");
+            Console.WriteLine("[INFO] Saving Jobs...");
         }
     }
 }

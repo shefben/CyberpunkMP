@@ -24,6 +24,11 @@
 
 #include <ProtocolPCH.h>
 
+// Ensure protocol namespaces are available - include generated headers with absolute paths
+#include "../../../build/.gens/Protocol/windows/x64/release/rules/netpack/common.gen.h"
+#include "../../../build/.gens/Protocol/windows/x64/release/rules/netpack/client.gen.h"
+#include "../../../build/.gens/Protocol/windows/x64/release/rules/netpack/server.gen.h"
+
 #undef check
 
 #include <spdlog/spdlog.h>
@@ -37,6 +42,3 @@
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
-
-#include "client.gen.h"
-#include "server.gen.h"

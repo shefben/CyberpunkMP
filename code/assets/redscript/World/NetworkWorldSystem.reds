@@ -1,6 +1,7 @@
 module CyberpunkMP.World
 
-import Codeware.*
+import Codeware.UI.*
+import Codeware.Localization.*
 import CyberpunkMP.*
 
 public native class NetworkWorldSystem extends IGameSystem {

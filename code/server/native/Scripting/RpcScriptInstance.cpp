@@ -137,6 +137,14 @@ TP_EXPORT IRpc* IRpc::Get()
     return &s_instance;
 }
 
+// C-style wrapper for .NET interop
+extern "C" {
+    TP_EXPORT IRpc* RpcGet()
+    {
+        return IRpc::Get();
+    }
+}
+
 
 RpcCallExtended::~RpcCallExtended()
 {

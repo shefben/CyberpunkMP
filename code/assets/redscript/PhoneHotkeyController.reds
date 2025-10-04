@@ -1,3 +1,5 @@
+module CyberpunkMP
+
 @addField(PhoneHotkeyController)
 private let m_isMultiplayerUIOpenBBId: ref<CallbackHandle>;
 

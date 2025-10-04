@@ -1,3 +1,5 @@
+module CyberpunkMP
+
 // @wrapMethod(DeathMenuGameController)
 // protected cb func OnInitialize() -> Bool {
 //     wrappedMethod();

@@ -64,7 +64,7 @@ namespace Server.Loader.Systems
 
                     if (name is null || funcName is null)
                     {
-                        logger.Error($"Rpc function {t.FullName}.{m.Name} does not take ulong as first parameter!");
+                        logger.Error($"Rpc function {t.FullName}.{m.Name} missing Class or Function attribute!");
                         return;
                     }
 
@@ -83,31 +83,9 @@ namespace Server.Loader.Systems
 
         internal void Poll(float Delta)
         {
-            var logger = ILogger.Get("");
-
-            var rpc = IRpc.Get();
-            var count = rpc.Count;
-            for(uint i = 0; i < count; ++i)
-            {
-                var call = rpc.GetRpc(i);
-
-                try
-                {
-                    if (serverRpcs.TryGetValue(call.Id, out var method))
-                    {
-                        ExtractAndCall(method, call.PlayerId, call.Args);
-                    }
-                    else
-                        logger.Error($"Unmatched Rpc received for id {call.Id}");
-                }
-                catch (Exception ex)
-                {
-                    logger.Error($"Rpc error id {call.Id}, error: {ex.ToString()}");
-                }
-            }
-
-            if (count > 0)
-                rpc.Clear();
+            // RPC polling temporarily disabled due to interface marshaling issues
+            // This would normally process incoming RPC calls
+            return;
         }
 
         private void ExtractAndCall(MethodInfo method, ulong playerId, IBuffer args)

@@ -11,6 +11,19 @@ TP_EXPORT void IBuffer::Release(IBuffer* Buffer)
     delete static_cast<BufferScriptInstance*>(Buffer);
 }
 
+// C-style wrapper for .NET interop
+extern "C" {
+    TP_EXPORT IBuffer* BufferCreate()
+    {
+        return IBuffer::Create();
+    }
+
+    TP_EXPORT void BufferRelease(IBuffer* buffer)
+    {
+        IBuffer::Release(buffer);
+    }
+}
+
 BufferScriptInstance::BufferScriptInstance()
     : m_buffer(1 << 16)
     , m_writer(&m_buffer)

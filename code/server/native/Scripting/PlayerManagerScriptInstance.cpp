@@ -11,6 +11,14 @@ TP_EXPORT IPlayerManager* IPlayerManager::Get()
     return GServer->GetWorld()->get_mut<PlayerManager>()->GetScriptInstance();
 }
 
+// C-style wrapper for .NET interop
+extern "C" {
+    TP_EXPORT IPlayerManager* PlayerManagerGet()
+    {
+        return IPlayerManager::Get();
+    }
+}
+
 IPlayer* PlayerManagerScriptInstance::GetPlayer(uint64_t Id)
 {
     const auto it = m_scriptInstances.find(Id);

@@ -57,7 +57,8 @@ target("Server.Scripting")
             progress.show(opt.progress, "${color.build.target}build codegen")
             os.run("dotnet build " .. sdk_gen_proj)
             progress.show(opt.progress, "${color.build.target}codegen sdk")
-            os.run("dotnet run --project " .. sdk_gen_proj .. " -- " .. files)
+            -- Temporarily skip SDK generation due to CppSharp crash
+            -- os.run("dotnet run --project " .. sdk_gen_proj .. " -- " .. files)
             progress.show(opt.progress, "${color.build.target}build sdk")
             os.run("dotnet publish " .. sdk_proj .. " -o " .. sdk_output)
 

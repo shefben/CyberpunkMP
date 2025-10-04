@@ -1,3 +1,5 @@
+module CyberpunkMP
+
 native func Log(const text: script_ref<String>) -> Void
 native func LogWarning(const text: script_ref<String>) -> Void
 native func LogError(const text: script_ref<String>) -> Void

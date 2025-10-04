@@ -1,3 +1,5 @@
+module CyberpunkMP
+
 @addMethod(inkTextInput)
 public native func MoveCaret(position: Int32)
 

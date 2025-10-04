@@ -5,13 +5,13 @@ import CyberpunkMP.World.*
 import CyberpunkMP.Ink.*
 
 public struct TaxiJobInfo {
-    let id: Uint32;
-    let pickupLocation: Vector4;
-    let reward: Uint32;
+    public let id: Uint32;
+    public let pickupLocation: Vector4;
+    public let reward: Uint32;
 }
 
 public class TaxiJobEntry extends JobEntry {
-    let pickupLocation: Vector4;
+    public let pickupLocation: Vector4;
 }
 
 public native class TaxiServer extends ServerRpc {
@@ -47,7 +47,7 @@ public class TaxiDriverClient extends ClientRpc {
     }
 
     // Driver is close enough & is stopped, so rider can mount vehicle
-    public func MountPassenger(rider_server_id: Uint64) {
+    public func MountPassenger(rider_server_id: Uint64) -> Void {
         LogChannel(n"DEBUG", s"[TaxiDriverClient] MountPassenger");
 
         // get rid of mappin

@@ -1,6 +1,7 @@
 module CyberpunkMP.World
 
-import Codeware.*
+import Codeware.UI.*
+import Codeware.Localization.*
 import CyberpunkMP.*
 
 public native class VehicleSystem extends IScriptable {
@@ -37,7 +38,7 @@ public native class VehicleSystem extends IScriptable {
         return vehicle_entity_id;
     }
 
-    private cb func OnEntityAttached(event: ref<EntityLifecycleEvent>) {
+    private cb func OnEntityAttached(event: ref<EntityLifecycleEvent>) -> Void {
         LogChannel(n"DEBUG", "[VehicleSystem] OnEntityAttached");
         this.OnVehicleReady(event.GetEntity().GetEntityID());
     }
